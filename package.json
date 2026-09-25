@@ -1,0 +1,18 @@
+{
+  "name": "anvil-trades",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Anvil Trades Portal \u2014 one-command build and start for deployment",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "install:all": "npm --prefix server install && npm --prefix client install",
+    "build": "npm --prefix server install && npm --prefix client install && npm --prefix client run build",
+    "start": "node server/index.js",
+    "seed": "npm --prefix server run seed",
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev",
+    "test": "npm --prefix server test"
+  }
+}

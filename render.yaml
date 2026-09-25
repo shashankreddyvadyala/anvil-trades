@@ -1,0 +1,41 @@
+# Render blueprint. In Render: New → Blueprint → point it at this repo.
+#
+# This provisions a free Postgres alongside the web service, so signups and
+# applications survive restarts. Render's free web tier has no persistent
+# disk, which is exactly why the database lives outside the container.
+services:
+  - type: web
+    name: anvil-trades
+    runtime: node
+    plan: free
+    buildCommand: npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: anvil-db
+          property: connectionString
+      # Generated once by Render and kept across deploys.
+      - key: JWT_SECRET
+        generateValue: true
+      # The ONLY value Render will ask you for. It matters: the default
+      # password is published in this repo's README.
+      - key: DEMO_PASSWORD
+        sync: false
+      # Optional. Left empty on purpose so Render does not prompt for them
+      # during the Blueprint deploy — the app checks these for truthiness and
+      # simply turns the feature off when they are blank. Fill them in later
+      # from the dashboard if you want AI resume scanning or the job feed.
+      - key: ANTHROPIC_API_KEY
+        value: ""
+      - key: ADZUNA_APP_ID
+        value: ""
+      - key: ADZUNA_APP_KEY
+        value: ""
+
+databases:
+  - name: anvil-db
+    plan: free
