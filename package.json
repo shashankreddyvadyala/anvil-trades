@@ -4,7 +4,7 @@
   "private": true,
   "description": "Anvil Trades Portal \u2014 one-command build and start for deployment",
   "engines": {
-    "node": ">=18"
+    "node": "22.x"
   },
   "scripts": {
     "install:all": "npm --prefix server install && npm --prefix client install",
