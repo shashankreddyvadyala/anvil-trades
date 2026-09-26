@@ -33,7 +33,7 @@ export async function extractText(buffer, filename = "", mimetype = "") {
   const ext = name.slice(name.lastIndexOf("."));
 
   if (ext === ".pdf" || mimetype === "application/pdf") {
-    const doc = await getPdfjs().getDocument({ data: new Uint8Array(buffer) }).promise;
+   const doc = await getPdfjs().getDocument({ data: new Uint8Array(buffer), isEvalSupported: false }).promise;
     let text = "";
     for (let i = 1; i <= Math.min(doc.numPages, 8); i++) {
       const page = await doc.getPage(i);
