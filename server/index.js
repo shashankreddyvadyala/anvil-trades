@@ -50,7 +50,7 @@ if (await isEmpty()) {
   await seed({ quiet: true });
 } else {
   const rotated = await rotateDemoPasswords();
-  if (rotated) console.log(`Moved ${rotated} demo account(s) off the published password.`);
+  if (rotated) console.log(`Reset ${rotated} demo account(s) to the current DEMO_PASSWORD.`);
 }
 
 const app = express();
