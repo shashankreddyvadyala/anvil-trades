@@ -148,9 +148,10 @@ const accounts = [
 ];
 
 /**
- * Fix a site that was deployed before DEMO_PASSWORD was required: any demo
- * account still accepting the published password is moved to the private
- * one. Only the seeded demo emails are touched — never a real signup.
+ * Keep the demo accounts in step with DEMO_PASSWORD: any seeded demo account
+ * whose password doesn't match the current value is reset to it, so changing
+ * DEMO_PASSWORD in the host's settings and redeploying always takes effect.
+ * Only the seeded demo emails are touched — never a real signup.
  * Returns how many accounts were updated.
  */
 export async function rotateDemoPasswords() {
@@ -160,7 +161,7 @@ export async function rotateDemoPasswords() {
     `SELECT user_id, email, password_hash FROM users WHERE email IN (${emails.map(() => "?").join(",")})`,
     ...emails
   );
-  const stale = rows.filter(r => checkPassword(PUBLIC_DEMO_PASSWORD, r.password_hash));
+  const stale = rows.filter(r => !checkPassword(DEMO_PASSWORD, r.password_hash));
   if (!stale.length) return 0;
   const hash = hashPassword(DEMO_PASSWORD);
   for (const r of stale) await run("UPDATE users SET password_hash = ? WHERE user_id = ?", hash, r.user_id);
